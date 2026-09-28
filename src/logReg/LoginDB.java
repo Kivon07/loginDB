@@ -53,7 +53,8 @@ public class LoginDB {
 			stmt = conn.createStatement();
 			String createTable = "CREATE TABLE IF NOT EXISTS userCreds(userID int(3) auto_increment not null primary key,"
 					+ "userName varchar(50) unique not null,"
-					+ "password varchar(50) not null"
+					+ "password varchar(64) not null,"
+					+ "role VARCHAR(20) not null"
 					+ ");";
 			stmt.executeUpdate(createTable);
 		}catch(SQLException e) {
@@ -64,19 +65,17 @@ public class LoginDB {
 		try {
 				
 			
-//				String sql = "INSERT INTO userinfo(userName, passWord) values (?,?)";
-//				
-//				PreparedStatement pstate = conn.prepareStatement(sql);
+				String sql = "INSERT INTO usercreds(userName, password) values (?,?)";
 				
-//				 	pstate.setString(1, fName);
-//				    pstate.setString(2, lName);
-//				    pstate.setString(3, mInitial);
-//				    pstate.setInt(4, age);
+				PreparedStatement pstate = conn.prepareStatement(sql);
+				
+				 
+				    
 				
 				    
-//				    pstate.executeUpdate();
+				    pstate.executeUpdate();
 				   
-//				    pstate.close();
+				    pstate.close();
 		}catch(Exception e) {
 			System.out.println("hindi na insert Koven");
 			e.printStackTrace();

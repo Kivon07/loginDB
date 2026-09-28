@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
@@ -30,18 +31,19 @@ public class loginWindow extends JFrame {
 	private JTextField UserTextField;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
+	private String username = "banana";
+	private String password = "bananapotato";
+	private String role = "Student";
+	private static Connection conn;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		UserInput input = new UserInput();
-		Connection conn =  null;
-		Statement state = null;
 		
-		String url = "jdbc:mysql://localhost:3306/sampleLogin?serverTimezone=UTC";
-        String user = "root";
-        String password = "SQLang@246";
+		Statement stmt = null;
+		
 		
 		
 		
@@ -61,7 +63,7 @@ public class loginWindow extends JFrame {
 		System.out.println("Connecting to the dotabose hehehe.....");
 		
 		try {
-			conn = DriverManager.getConnection(url, user, password);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/samplelogin?serverTimezone=UTC","root","SQLang@246");
 		}catch(SQLException e) {
 			System.out.println("MYSql Database di konektado");
 		}
@@ -74,26 +76,19 @@ public class loginWindow extends JFrame {
 		System.out.println("Creating a Table");
 		
 		try {
-				
-			
-				String sql = "INSERT INTO userlogininfo(firstName, lastName, middle_initial, age) values (?,?,?,?)";
-				
-				PreparedStatement pstate = conn.prepareStatement(sql);
-				
-//				 	pstate.setString(1, fName);
-//				    pstate.setString(2, lName);
-//				    pstate.setString(3, mInitial);
-//				    pstate.setInt(4, age);
-				
-				    
-				    pstate.executeUpdate();
-				    System.out.println("Data inserted successfully into table!");
-				    pstate.close();
+			stmt = conn.createStatement();
+			String createTable = "CREATE TABLE IF NOT EXISTS userCreds(userID int(3) auto_increment not null primary key,"
+					+ "userName varchar(50) unique not null,"
+					+ "password varchar(64) not null,"
+					+ "role VARCHAR(20) not null"
+					+ ");";
+			stmt.executeUpdate(createTable);
 		}catch(SQLException e) {
-			System.out.println("hindi na insert Koven");
-			e.printStackTrace();
-			
+			System.out.print("Not Created");
 		}
+		
+		
+	
 		
 		System.out.println("Created zy table");
 		//-----------------------------------
@@ -144,12 +139,19 @@ public class loginWindow extends JFrame {
 		lblNewLabel_2.setBounds(45, 230, 44, 12);
 		contentPane.add(lblNewLabel_2);
 		
-		JButton btnSignIn = new JButton("SignIn");
+		JButton btnSignIn = new JButton("Sign in");
 		btnSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				//test method here
 				
-				//method here
+				
+				
+				
+				//--------------------------------------
+				
+				//sign in checker
+				
 			}
 		});
 		btnSignIn.setBounds(121, 274, 149, 64);
@@ -159,12 +161,41 @@ public class loginWindow extends JFrame {
 		lblNewLabel_3.setBounds(280, 262, 112, 89);
 		contentPane.add(lblNewLabel_3);
 		
-		JButton btnSignUp = new JButton("Sign Up");
+		JButton btnSignUp = new JButton("Enroll");
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				//test adding of account 
+				passHash hash = new passHash();
 				
-				//method here
+				try {
+					
+					
+					String sql = "INSERT INTO usercreds(userName, password,role) values (?,?,?)";
+					
+					PreparedStatement pstate = conn.prepareStatement(sql);
+					
+					 	pstate.setString(1, username);
+					    pstate.setString(2, hash.encryptString(password));
+					    pstate.setString(3, role);
+					
+					    
+					    pstate.executeUpdate();
+					    System.out.println("inserted the values");
+					    pstate.close();
+					    
+				}catch(SQLIntegrityConstraintViolationException e1) {
+					System.out.println("credentials already exists");
+				}catch(Exception e1) {
+					
+						System.out.println("Other Errors");
+						e1.printStackTrace();
+				}
+				
+				//--------
+				
+					
+				//enroll method or class here
 			}
 		});
 		btnSignUp.setBounds(394, 274, 149, 64);
