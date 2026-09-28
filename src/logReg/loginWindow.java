@@ -32,9 +32,10 @@ public class loginWindow extends JFrame {
 	private JTextField UserTextField;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
-	private String username = "banana";
+	private String username = "banana"; //placeholder para sa database 
 	private String password = "bananapotato";
 	private String role = "Student";
+	
 	private static Connection conn;
 
 	/**
@@ -44,7 +45,9 @@ public class loginWindow extends JFrame {
 		UserInput input = new UserInput();
 		
 		Statement stmt = null;
-		
+		String url = "jdbc:mysql://localhost:3306/sampleLogin?serverTimezone=UTC";
+        String user = "root";
+        String password = "SQLang@246";
 		
 		
 		
@@ -64,7 +67,7 @@ public class loginWindow extends JFrame {
 		System.out.println("Connecting to the dotabose hehehe.....");
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/samplelogin?serverTimezone=UTC","root","SQLang@246");
+			conn = DriverManager.getConnection(url, user, password);
 		}catch(SQLException e) {
 			System.out.println("MYSql Database di konektado");
 		}
@@ -156,10 +159,13 @@ public class loginWindow extends JFrame {
 					 
 					 boolean checked;
 					 if(username.isEmpty() || pass.isEmpty()) {
+						 
 						 System.out.println("Please fill in the forms");
+						 
 					 }else {
+						 
 						 checked = hash.hashChecker(pass, hash.encryptString(password));
-						 System.out.println(username + " " + pass + "password correct: " + checked);
+						 System.out.println("user: " + username + " password: " + pass + " pass correct?: " + checked);
 						 System.out.println(hash.encryptString(password));
 						 
 					 }
@@ -189,7 +195,14 @@ public class loginWindow extends JFrame {
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				
+				
+				//enroll method or class here
+				
+				
 				//test adding of account 
+				//tong line of code nato ang dapat panghuli sa enrollment process
+				
 				convertHash hash = new convertHash();
 				
 				try {
@@ -219,7 +232,7 @@ public class loginWindow extends JFrame {
 				//--------
 				
 					
-				//enroll method or class here
+				
 			}
 		});
 		btnSignUp.setBounds(394, 274, 149, 64);
