@@ -16,7 +16,7 @@ public class LoginDB {
 	public static void main(String[] args) {
 		UserInput input = new UserInput();
 		Connection conn =  null;
-		Statement state = null;
+		Statement stmt = null;
 		
 		
 		
@@ -50,9 +50,21 @@ public class LoginDB {
 		System.out.println("Creating a Table");
 		
 		try {
+			stmt = conn.createStatement();
+			String createTable = "CREATE TABLE IF NOT EXISTS userCreds(userID int(3) auto_increment not null primary key,"
+					+ "userName varchar(50) unique not null,"
+					+ "password varchar(50) not null"
+					+ ");";
+			stmt.executeUpdate(createTable);
+		}catch(SQLException e) {
+			System.out.print("Not Created");
+		}
+		
+		
+		try {
 				
 			
-				String sql = "INSERT INTO userinfo(firstName, lastName, middle_initial, age) values (?,?,?,?)";
+				String sql = "INSERT INTO userinfo(userName, passWord) values (?,?)";
 				
 				PreparedStatement pstate = conn.prepareStatement(sql);
 				
