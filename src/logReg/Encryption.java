@@ -13,6 +13,8 @@ public class Encryption {
 	private int KEY_SIZE = 128;
 	private int T_LEN = 128;
 	private Cipher encryptionCi;
+	
+	
 	public void init() throws Exception {
 		KeyGenerator generator = KeyGenerator.getInstance("AES");
 		generator.init(KEY_SIZE);
@@ -53,19 +55,19 @@ public class Encryption {
 		Encryption en = new Encryption();
 		
 		try {
-			
+			//initializes the encryption
 			en.init();
 			
 			//converts it to encrypted text
 			String pass = en.encrypt("Banana");
 			
 			
-			// converts it to readble text
+			// converts it to readable text
 			String decM = en.decrypt(pass);
 			
 			System.err.println("En message " + pass);
 			
-			System.err.println("De message" + decM);
+			System.err.println("De message " + decM);
 			
 		}catch(Exception ignored) {
 			

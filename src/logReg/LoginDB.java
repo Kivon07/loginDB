@@ -64,9 +64,9 @@ public class LoginDB {
 		try {
 				
 			
-				String sql = "INSERT INTO userinfo(userName, passWord) values (?,?)";
-				
-				PreparedStatement pstate = conn.prepareStatement(sql);
+//				String sql = "INSERT INTO userinfo(userName, passWord) values (?,?)";
+//				
+//				PreparedStatement pstate = conn.prepareStatement(sql);
 				
 //				 	pstate.setString(1, fName);
 //				    pstate.setString(2, lName);
@@ -74,16 +74,16 @@ public class LoginDB {
 //				    pstate.setInt(4, age);
 				
 				    
-				    pstate.executeUpdate();
-				    System.out.println("Data inserted successfully into table!");
-				    pstate.close();
-		}catch(SQLException e) {
+//				    pstate.executeUpdate();
+				   
+//				    pstate.close();
+		}catch(Exception e) {
 			System.out.println("hindi na insert Koven");
 			e.printStackTrace();
 			
 		}
 		
-		System.out.println("Created zy table");
+		
 	}
 	
 
