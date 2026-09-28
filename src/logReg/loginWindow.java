@@ -149,19 +149,25 @@ public class loginWindow extends JFrame {
 				 
 				 String username = UserTextField.getText();
 				 String pass = new String(passwordField.getPassword());
-				 
+				
 				 
 				 
 				 try {
-					 String encryptedPass = hash.encryptString(pass);
 					 
+					 boolean checked;
 					 if(username.isEmpty() || pass.isEmpty()) {
 						 System.out.println("Please fill in the forms");
 					 }else {
-						 System.out.println(username + " " + encryptedPass);
+						 checked = hash.hashChecker(pass, hash.encryptString(password));
+						 System.out.println(username + " " + pass + "password correct: " + checked);
+						 System.out.println(hash.encryptString(password));
+						 
 					 }
 				 }catch(NoSuchAlgorithmException e1) {
-					 e1.printStackTrace();				 }
+					 e1.printStackTrace();				
+
+				 }
+				 
 				 
 				
 				
