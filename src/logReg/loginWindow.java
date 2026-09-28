@@ -15,6 +15,7 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -144,16 +145,25 @@ public class loginWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				//test method here
-				
+				 convertHash hash = new convertHash();
+				 
 				 String username = UserTextField.getText();
 				 String pass = new String(passwordField.getPassword());
 				 
 				 
-				 if(username.isEmpty() || pass.isEmpty()) {
-					 System.out.println("Please fill in the forms");
-				 }else {
-					 System.out.println(username + " " + pass);
-				 }
+				 
+				 try {
+					 String encryptedPass = hash.encryptString(pass);
+					 
+					 if(username.isEmpty() || pass.isEmpty()) {
+						 System.out.println("Please fill in the forms");
+					 }else {
+						 System.out.println(username + " " + encryptedPass);
+					 }
+				 }catch(NoSuchAlgorithmException e1) {
+					 e1.printStackTrace();				 }
+				 
+				
 				
 				
 				//--------------------------------------
@@ -174,7 +184,7 @@ public class loginWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				//test adding of account 
-				passHash hash = new passHash();
+				convertHash hash = new convertHash();
 				
 				try {
 					

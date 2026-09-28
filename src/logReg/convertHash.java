@@ -4,7 +4,7 @@ package logReg;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class passHash {
+public class convertHash {
 	
 	public String encryptString(String input) throws NoSuchAlgorithmException{
 		
@@ -19,12 +19,18 @@ public class passHash {
 			hexString.append(String.format("%02x",b));
 		}
 		
-		return hexString.toString()
-;	}
+		return hexString.toString();	
+		
+	}
+	public boolean hashChecker(String inputPass, String storedHash) throws NoSuchAlgorithmException{
+		
+		String inputHash = encryptString(inputPass);
+		return inputHash.equals(storedHash);
 	
+	}
 	
 	public static void main(String[] args) throws NoSuchAlgorithmException{
-		passHash hash = new passHash();
+		convertHash hash = new convertHash();
 		
 		String pass = "banana";
 		

@@ -33,7 +33,7 @@ public class UserInput {
 	}
 	
 	public String encryptPass() {
-		passHash hash = new passHash();
+		convertHash hash = new convertHash();
 		
 		String encryptedPass = getPass();
 		
