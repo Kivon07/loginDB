@@ -1,4 +1,4 @@
-package testingDatabase;
+package logReg;
 
 
 import java.sql.DriverManager;
@@ -18,17 +18,7 @@ public class LoginDB {
 		Connection conn =  null;
 		Statement state = null;
 		
-		input.setfName(JOptionPane.showInputDialog("Input First Name"));
-		String fName = input.getfName();
 		
-		input.setlName(JOptionPane.showInputDialog("Input Last Name"));
-		String lName = input.getlName();
-		
-		input.setmInit(JOptionPane.showInputDialog("Input Middle Initiial")); 
-		String mInitial = input.getmInit();
-		
-		input.setAge(Integer.parseInt(JOptionPane.showInputDialog("Input Age: "))); 
-		int age = input.getAge();
 		
 		
 		
@@ -66,10 +56,10 @@ public class LoginDB {
 				
 				PreparedStatement pstate = conn.prepareStatement(sql);
 				
-				 	pstate.setString(1, fName);
-				    pstate.setString(2, lName);
-				    pstate.setString(3, mInitial);
-				    pstate.setInt(4, age);
+//				 	pstate.setString(1, fName);
+//				    pstate.setString(2, lName);
+//				    pstate.setString(3, mInitial);
+//				    pstate.setInt(4, age);
 				
 				    
 				    pstate.executeUpdate();

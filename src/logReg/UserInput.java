@@ -1,4 +1,4 @@
-package testingDatabase;
+package logReg;
 
 public class UserInput {
 	private static String fName;

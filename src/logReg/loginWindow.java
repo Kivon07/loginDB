@@ -1,4 +1,4 @@
-package testingDatabase;
+package logReg;
 
 import java.awt.EventQueue;
 
@@ -39,6 +39,9 @@ public class loginWindow extends JFrame {
 		Connection conn =  null;
 		Statement state = null;
 		
+		String url = "jdbc:mysql://localhost:3306/sampleLogin?serverTimezone=UTC";
+        String user = "root";
+        String password = "SQLang@246";
 		
 		
 		
@@ -58,7 +61,7 @@ public class loginWindow extends JFrame {
 		System.out.println("Connecting to the dotabose hehehe.....");
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/samplelogin?serverTimezone=UTC","root","SQLang@246");
+			conn = DriverManager.getConnection(url, user, password);
 		}catch(SQLException e) {
 			System.out.println("MYSql Database di konektado");
 		}
@@ -73,7 +76,7 @@ public class loginWindow extends JFrame {
 		try {
 				
 			
-				String sql = "INSERT INTO userinfo(firstName, lastName, middle_initial, age) values (?,?,?,?)";
+				String sql = "INSERT INTO userlogininfo(firstName, lastName, middle_initial, age) values (?,?,?,?)";
 				
 				PreparedStatement pstate = conn.prepareStatement(sql);
 				
@@ -93,7 +96,7 @@ public class loginWindow extends JFrame {
 		}
 		
 		System.out.println("Created zy table");
-		
+		//-----------------------------------
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
