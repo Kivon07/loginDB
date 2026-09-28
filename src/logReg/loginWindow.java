@@ -145,7 +145,15 @@ public class loginWindow extends JFrame {
 				
 				//test method here
 				
-				
+				 String username = UserTextField.getText();
+				 String pass = new String(passwordField.getPassword());
+				 
+				 
+				 if(username.isEmpty() || pass.isEmpty()) {
+					 System.out.println("Please fill in the forms");
+				 }else {
+					 System.out.println(username + " " + pass);
+				 }
 				
 				
 				//--------------------------------------
