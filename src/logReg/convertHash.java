@@ -22,6 +22,7 @@ public class convertHash {
 		return hexString.toString();	
 		
 	}
+	
 	public boolean hashChecker(String inputPass, String storedHash) throws NoSuchAlgorithmException{
 		
 		String inputHash = encryptString(inputPass);

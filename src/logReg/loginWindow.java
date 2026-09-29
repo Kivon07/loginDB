@@ -37,6 +37,7 @@ public class loginWindow extends JFrame {
 	private String role = "Student";
 	
 	private static Connection conn;
+	private JLabel prompt;
 
 	/**
 	 * Launch the application.
@@ -113,11 +114,16 @@ public class loginWindow extends JFrame {
 	 */
 	public loginWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 582, 469);
+		setBounds(100, 100, 610, 469);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		prompt = new JLabel("");
+		prompt.setForeground(new Color(255, 128, 64));
+		prompt.setBounds(121, 119, 385, 26);
+		contentPane.add(prompt);
 		
 		JLabel lblNewLabel = new JLabel("Admissions Office");
 		lblNewLabel.setFont(new Font("Poppins", Font.BOLD, 24));
@@ -158,14 +164,18 @@ public class loginWindow extends JFrame {
 				 try {
 					 
 					 boolean checked;
+					 
 					 if(username.isEmpty() || pass.isEmpty()) {
 						 
 						 System.out.println("Please fill in the forms");
 						 
 					 }else {
 						 
+						 
 						 checked = hash.hashChecker(pass, hash.encryptString(password));
+						 
 						 System.out.println("user: " + username + " password: " + pass + " pass correct?: " + checked);
+						 
 						 System.out.println(hash.encryptString(password));
 						 
 					 }
@@ -212,8 +222,8 @@ public class loginWindow extends JFrame {
 					
 					PreparedStatement pstate = conn.prepareStatement(sql);
 					
-					 	pstate.setString(1, username);
-					    pstate.setString(2, hash.encryptString(password));
+					 	pstate.setString(1, UserTextField.getText());
+					    pstate.setString(2, hash.encryptString(passwordField.getText()));
 					    pstate.setString(3, role);
 					
 					    
@@ -222,6 +232,7 @@ public class loginWindow extends JFrame {
 					    pstate.close();
 					    
 				}catch(SQLIntegrityConstraintViolationException e1) {
+					prompt.setText("User already Exists");
 					System.out.println("credentials already exists");
 				}catch(Exception e1) {
 					

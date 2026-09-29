@@ -11,5 +11,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/kevin/eclipse-workspace/loginRegister/lib/jbcrypt-0.4.jar" sourcepath="src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
