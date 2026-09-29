@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
@@ -171,15 +172,36 @@ public class loginWindow extends JFrame {
 						 
 					 }else {
 						 
+						 Salt salt = new Salt();
 						 
-						 checked = hash.hashChecker(pass, hash.encryptString(password));
-						 
-						 System.out.println("user: " + username + " password: " + pass + " pass correct?: " + checked);
-						 
-						 System.out.println(hash.encryptString(password));
-						 
+						 String sql = "select password from usercreds where userName = ?";
+							
+							PreparedStatement pstate = conn.prepareStatement(sql);
+							
+							 	pstate.setString(1, UserTextField.getText());
+							
+							    
+							    ResultSet rs = pstate.executeQuery()
+;								
+							    if(rs.next()) {
+							    	String storedHash = rs.getString("password");
+							    	String inputPass = new String(passwordField.getPassword());
+							    	
+							    	boolean valid = salt.passChecker(inputPass, storedHash);
+							    	
+							    	if(valid) {
+							    		System.out.println("Correct Pass");
+							    	}
+							    	else {
+							    		System.out.println("Wrong pass");
+							    	}
+							    }
+							    
+							    
+							    pstate.close();
+						
 					 }
-				 }catch(NoSuchAlgorithmException e1) {
+				 }catch(Exception e1) {
 					 e1.printStackTrace();				
 
 				 }
@@ -213,7 +235,7 @@ public class loginWindow extends JFrame {
 				//test adding of account 
 				//tong line of code nato ang dapat panghuli sa enrollment process
 				
-				convertHash hash = new convertHash();
+				Salt salt = new Salt();
 				
 				try {
 					
@@ -221,9 +243,12 @@ public class loginWindow extends JFrame {
 					String sql = "INSERT INTO usercreds(userName, password,role) values (?,?,?)";
 					
 					PreparedStatement pstate = conn.prepareStatement(sql);
+					String pass = new String(passwordField.getPassword());
 					
+					
+						
 					 	pstate.setString(1, UserTextField.getText());
-					    pstate.setString(2, hash.encryptString(passwordField.getText()));
+					    pstate.setString(2, salt.convPass(pass));
 					    pstate.setString(3, role);
 					
 					    
