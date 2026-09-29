@@ -1,29 +1,47 @@
 package logReg;
-import java.security.NoSuchAlgorithmException;
+
 
 import org.mindrot.jbcrypt.BCrypt;
 
 
 public class Salt {
-	public static void main(String[]args) {
-		
-		convertHash hash = new convertHash();
-		String hashness;
-		
-		try {
-			hashness = hash.encryptString("banana");
-			System.out.println(hashness);
-		}catch(NoSuchAlgorithmException e) {
-			
-		}
+	public boolean passChecker(String password, String hash) {
 		
 		
-		String hashed = BCrypt.hashpw("banana", BCrypt.gensalt());
 		
-		boolean check = BCrypt.checkpw("banana", hashed);
+		boolean check = BCrypt.checkpw(password, hash);
+		
+		return check;
+		
+	}
+	
+	public String convPass(String password) {
+		
+		String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 		
 		
-		System.out.println(hashed + " " + check);
+		return hashed;
+	}
+	
+	
+	public static void main (String[] args) {
+		
+		Salt salt = new Salt();
+		
+		
+		String pass = "potato";
+		String wrongpass = "banana";
+		
+		
+		
+		String hashed = salt.convPass(pass);
+		
+		System.out.println(hashed);
+		
+		System.out.println(salt.passChecker(pass, hashed));
+		
+		System.out.println(salt.passChecker(wrongpass, hashed));
+		
 	}
 	
 }
