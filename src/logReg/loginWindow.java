@@ -43,10 +43,11 @@ public class loginWindow extends JFrame {
 		
 		
 		Statement stmt = null;
-		String url = "jdbc:mysql://localhost:3306/sampleLogin?serverTimezone=UTC";
-        String user = "root";
-        String password = "SQLang@246";
-		Salt salt = new Salt();
+		final String url = "jdbc:mysql://localhost:3306/";
+		final String DATABASE = "enrollDB";
+        final String user = "root";
+        final String password = "SQLang@246";
+		final Salt salt = new Salt();
 		
 		
 		
@@ -73,9 +74,29 @@ public class loginWindow extends JFrame {
 			System.out.println("Success beybee");
 		}
 		
+		try {
+			stmt = conn.createStatement();
+			
+			String createDatabase = "Create DATABASE IF NOT EXISTS " + DATABASE;
+			
+			
+			stmt.executeUpdate(createDatabase);
+		}catch(SQLException e) {
+			System.out.println("failed creating database");
+		}
 		
-		//create table section
-		System.out.println("Creating a Table");
+		
+		try {
+			conn.close();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			conn = DriverManager.getConnection(url + DATABASE, user, password);
+		}catch(SQLException e) {
+			System.out.println("Connected to" + DATABASE);
+		}
 		
 		try {
 			stmt = conn.createStatement();
