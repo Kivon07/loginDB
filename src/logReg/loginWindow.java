@@ -5,10 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.JPasswordField;
 import java.awt.Color;
@@ -33,8 +30,7 @@ public class loginWindow extends JFrame {
 	private JTextField UserTextField;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
-	private String username = "banana"; //placeholder para sa database 
-	private String password = "bananapotato";
+
 	private String role = "Student";
 	
 	private static Connection conn;
@@ -44,13 +40,13 @@ public class loginWindow extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		UserInput input = new UserInput();
+		
 		
 		Statement stmt = null;
 		String url = "jdbc:mysql://localhost:3306/sampleLogin?serverTimezone=UTC";
         String user = "root";
         String password = "SQLang@246";
-		
+		Salt salt = new Salt();
 		
 		
 		
@@ -92,6 +88,36 @@ public class loginWindow extends JFrame {
 		}catch(SQLException e) {
 			System.out.print("Not Created");
 		}
+		
+		
+			
+		try{
+			
+			
+			
+			
+			String sql = "INSERT INTO usercreds(userName, password,role) values (?,?,?)";
+			
+			PreparedStatement pstate = conn.prepareStatement(sql);
+		
+			
+			
+				
+			 	pstate.setString(1, "root");
+			    pstate.setString(2, salt.convPass("adminHW"));
+			    pstate.setString(3, "admin");
+			
+			    
+			    pstate.executeUpdate();
+			    System.out.println("inserted the values");
+			    pstate.close();
+		}catch(SQLIntegrityConstraintViolationException e1){
+			System.out.println("error");
+			
+		}catch(SQLException e3){
+			System.out.println();
+		}
+		
 		
 		
 	
@@ -235,26 +261,36 @@ public class loginWindow extends JFrame {
 				//test adding of account 
 				//tong line of code nato ang dapat panghuli sa enrollment process
 				
+				
+				
+				String username = UserTextField.getText();
+				String pass = new String(passwordField.getPassword());
+				
 				Salt salt = new Salt();
 				
 				try {
 					
-					
-					String sql = "INSERT INTO usercreds(userName, password,role) values (?,?,?)";
-					
-					PreparedStatement pstate = conn.prepareStatement(sql);
-					String pass = new String(passwordField.getPassword());
-					
-					
+					if(pass.isBlank() || username.isBlank()) {
+						prompt.setText("Please fill the fields");
+					}
+					else {
+						String sql = "INSERT INTO usercreds(userName, password,role) values (?,?,?)";
 						
-					 	pstate.setString(1, UserTextField.getText());
-					    pstate.setString(2, salt.convPass(pass));
-					    pstate.setString(3, role);
+						PreparedStatement pstate = conn.prepareStatement(sql);
 					
-					    
-					    pstate.executeUpdate();
-					    System.out.println("inserted the values");
-					    pstate.close();
+						 
+							
+						 	pstate.setString(1, username);
+						    pstate.setString(2, salt.convPass(pass));
+						    pstate.setString(3, role);
+						
+						    
+						    pstate.executeUpdate();
+						    System.out.println("inserted the values");
+						    pstate.close();
+					}
+					
+					
 					    
 				}catch(SQLIntegrityConstraintViolationException e1) {
 					prompt.setText("User already Exists");
@@ -276,3 +312,11 @@ public class loginWindow extends JFrame {
 
 	}
 }
+
+
+
+
+// yung Salt class ang ginamit ko para i convert yung pass to hash
+// ginamit koden yun to compare yun nainput na pass to the stored hash sa database
+// use the role variable to determine kung admin access or student ang lalabas na frame
+// mostly admin access naman sa pagkakaalam ko yun syst
