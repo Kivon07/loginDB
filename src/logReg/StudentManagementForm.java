@@ -39,13 +39,13 @@ public class StudentManagementForm extends javax.swing.JFrame {
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
         // Header Title
         JLabel lblTitle = new JLabel("  Student Information Management System", JLabel.LEFT);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitle.setPreferredSize(new Dimension(1000, 40));
-        add(lblTitle, BorderLayout.NORTH);
+        getContentPane().add(lblTitle, BorderLayout.NORTH);
 
         // Tabbed Pane (2 Tabs na lang matatira)
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -104,6 +104,9 @@ public class StudentManagementForm extends javax.swing.JFrame {
         JLabel lblStudentID = new JLabel("Student ID:");
         lblStudentID.setBounds(20, 50, 100, 25);
         panelManage.add(lblStudentID);
+        
+        
+        
 
         txtManageStudentID = new JTextField();
         txtManageStudentID.setBounds(120, 50, 220, 25);
@@ -138,8 +141,38 @@ public class StudentManagementForm extends javax.swing.JFrame {
         lblCourse.setBounds(20, 210, 100, 25);
         panelManage.add(lblCourse);
 
-        String[] courses = {"BS Computer Science", "BS Information Technology", "BS Information Systems"};
-        cbManageCourse = new JComboBox<>(courses);
+//        String[] courses = {"BS Computer Science", "BS Information Technology", "BS Information Systems"};
+//        cbManageCourse = new JComboBox<>(courses);
+//        cbManageCourse.setBounds(120, 210, 220, 25);
+//        panelManage.add(cbManageCourse);
+        
+        
+        
+        cbManageCourse = new JComboBox<>();
+        
+        
+        try {
+        	Connection conn = DBConnection.getConnection();
+        	
+        	String sql ="Select course_name FROM courses";
+        	
+        	PreparedStatement pstate = conn.prepareStatement(sql);
+        	ResultSet rs = pstate.executeQuery();
+        	
+        	while(rs.next()) {
+        		cbManageCourse.addItem(rs.getString("course_name"));
+        	}
+        	rs.close();
+        	pstate.close();
+        	conn.close();
+        }catch(SQLException e) {
+        	 JOptionPane.showMessageDialog(
+        		        null,
+        		        "Error loading courses: " + e.getMessage(),
+        		        "Database Error",
+        		        JOptionPane.ERROR_MESSAGE);
+        }
+        
         cbManageCourse.setBounds(120, 210, 220, 25);
         panelManage.add(cbManageCourse);
 
@@ -199,7 +232,7 @@ public class StudentManagementForm extends javax.swing.JFrame {
 
         tabbedPane.addTab("Student Information Management", panelManage);
 
-        add(tabbedPane, BorderLayout.CENTER);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         // ==========================================
         // EVENT LISTENERS
@@ -231,7 +264,7 @@ public class StudentManagementForm extends javax.swing.JFrame {
     // 1. Load pending applications
     private void loadPendingApplications() {
         pendingModel.setRowCount(0);
-        String sql = "SELECT * FROM enrollment_applications WHERE status = 'Pending' ORDER BY id DESC";
+        String sql = "SELECT * FROM enrollment_applications WHERE status = 'Pending' ORDER BY applicant_id DESC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pst = conn.prepareStatement(sql);
@@ -239,10 +272,10 @@ public class StudentManagementForm extends javax.swing.JFrame {
 
             while (rs.next()) {
                 pendingModel.addRow(new Object[]{
-                    rs.getInt("id"),
+                    rs.getInt("applicant_id"),
                     rs.getString("first_name"),
                     rs.getString("last_name"),
-                    rs.getString("email"),
+                    rs.getString("personal_emails"),
                     rs.getString("course"),
                     rs.getString("year_level"),
                     rs.getString("status")
@@ -412,6 +445,12 @@ public class StudentManagementForm extends javax.swing.JFrame {
         String firstName = txtManageFirstName.getText().trim();
         String lastName = txtManageLastName.getText().trim();
         String email = txtManageEmail.getText().trim();
+       
+        if (cbManageCourse.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Please select a course.");
+            return;
+        }
+        
         String course = cbManageCourse.getSelectedItem().toString();
         String yearLevel = cbManageYearLevel.getSelectedItem().toString();
         String status = cbManageStatus.getSelectedItem().toString();
@@ -425,6 +464,9 @@ public class StudentManagementForm extends javax.swing.JFrame {
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Input Error", JOptionPane.WARNING_MESSAGE);
             return;
+        }
+        if(cbManageCourse.getItemCount() == 0) {
+        	JOptionPane.showMessageDialog(null, "No Courses Available");
         }
 
         String username = studentId;
@@ -541,7 +583,7 @@ public class StudentManagementForm extends javax.swing.JFrame {
     public static void main(String args[]) {
     	
     	
-    	Statement stmt = null;
+    
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -556,21 +598,7 @@ public class StudentManagementForm extends javax.swing.JFrame {
         EventQueue.invokeLater(() -> new StudentManagementForm().setVisible(true));
         
         
-        try{
-        	stmt = conn.createStatement();
-			
-			String createTable = "CREATE TABLE IF NOT EXISTS userCreds(userID int(3) auto_increment not null primary key,"
-					+ "userName varchar(50) unique not null,"
-					+ "password varchar(64) not null,"
-					+ "role VARCHAR(20) not null"
-					+ ");";
-			stmt.executeUpdate(createTable);
-        }
         
-      
-			catch(SQLException e) {
-			System.out.print("Not Created");
-		}
     }
 }
 

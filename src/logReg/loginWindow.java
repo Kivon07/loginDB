@@ -46,7 +46,7 @@ public class loginWindow extends JFrame {
 		final String url = "jdbc:mysql://localhost:3306/";
 		final String DATABASE = "enrollDB";
         final String user = "root";
-        final String password = "SQLang@246";
+        final String password = "SQLang@246"; // ur pass here
 		final Salt salt = new Salt();
 		
 		
@@ -98,17 +98,7 @@ public class loginWindow extends JFrame {
 			System.out.println("Connected to" + DATABASE);
 		}
 		
-		try {
-			stmt = conn.createStatement();
-			String createTable = "CREATE TABLE IF NOT EXISTS userCreds(userID int(3) auto_increment not null primary key,"
-					+ "userName varchar(50) unique not null,"
-					+ "password varchar(64) not null,"
-					+ "role VARCHAR(20) not null"
-					+ ");";
-			stmt.executeUpdate(createTable);
-		}catch(SQLException e) {
-			System.out.print("Not Created");
-		}
+
 		
 		
 			

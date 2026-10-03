@@ -1,4 +1,6 @@
 package logReg;
+
+
 import org.mindrot.jbcrypt.BCrypt;
 
 

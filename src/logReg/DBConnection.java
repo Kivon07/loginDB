@@ -2,6 +2,7 @@ package logReg;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -15,7 +16,7 @@ public class DBConnection {
 
     private static final String USER = "root";
 
-    private static final String PASSWORD = "SQLang@246";
+    private static final String PASSWORD = "SQLang@246"; // ur pass here
 
 
     public static Connection getConnection() {
@@ -30,9 +31,7 @@ public class DBConnection {
             System.out.println("JDBC registered.");
 
 
-            // -----------------------------------------
-            // Connect to MySQL server
-            // -----------------------------------------
+            //connect to sqlServ
             conn = DriverManager.getConnection(
                 URL,
                 USER,
@@ -41,10 +40,7 @@ public class DBConnection {
 
             System.out.println("Connected to MySQL server.");
 
-
-            // -----------------------------------------
-            // Create database if it doesn't exist
-            // -----------------------------------------
+            //create db if not existing
             Statement stmt = conn.createStatement();
 
             String createDatabase =
@@ -59,15 +55,11 @@ public class DBConnection {
             stmt.close();
 
 
-            // -----------------------------------------
-            // Close server connection
-            // -----------------------------------------
+            //close server connnect
             conn.close();
 
 
-            // -----------------------------------------
-            // Connect to enrollDB
-            // -----------------------------------------
+            //connect to enrollDB
             conn = DriverManager.getConnection(
                 URL + DATABASE,
                 USER,
@@ -78,24 +70,61 @@ public class DBConnection {
                 "Connected to " + DATABASE
             );
 
-
-            // -----------------------------------------
-            // Create usercreds table
-            // -----------------------------------------
+            //create all necessaryTables
             Statement tableStmt = conn.createStatement();
 
-            String createTable =
-                "CREATE TABLE IF NOT EXISTS usercreds (" +
-                "userID INT AUTO_INCREMENT PRIMARY KEY, " +
-                "userName VARCHAR(50) UNIQUE NOT NULL, " +
-                "password VARCHAR(255) NOT NULL, " +
-                "role VARCHAR(20) NOT NULL" +
-                ")";
+            
+          
+			
+            String createTable = "CREATE TABLE IF NOT EXISTS userCreds("
+            		+ "userID int(3) auto_increment not null primary key,"
+					+ "userName varchar(50) unique not null,"
+					+ "password varchar(64) not null,"
+					+ "role VARCHAR(20) not null"
+					+ ");";
+			tableStmt.executeUpdate(createTable);
+            
+            String createTableCourses = "CREATE TABLE IF NOT EXISTS courses ("
+                    + "id INT AUTO_INCREMENT PRIMARY KEY, "
+                    + "course_code VARCHAR(50) NOT NULL UNIQUE, "
+                    + "course_name VARCHAR(150) NOT NULL UNIQUE, "
+                    + "description TEXT"
+                    + ");";
 
-            tableStmt.executeUpdate(createTable);
+            tableStmt.executeUpdate(createTableCourses);
+            
+ 
+            
+            String createTableStudents = "CREATE TABLE IF NOT EXISTS students ("
+                    + "student_id INT AUTO_INCREMENT PRIMARY KEY, "
+                    + "student_number varchar(12)NOT NULL default '',"
+                    + "username VARCHAR(50) NOT NULL UNIQUE, "
+                    + "first_name VARCHAR(100) NOT NULL, "
+                    + "last_name VARCHAR(100) NOT NULL, "
+                    + "personal_email VARCHAR(150) NOT NULL UNIQUE, "
+                    + "univ_email VARCHAR (150) not null unique, "
+                    + "course VARCHAR(100) NOT NULL, "
+                    + "year_level VARCHAR(50) NOT NULL, "
+                    + "status VARCHAR(50) NOT NULL, "
+                    + "FOREIGN KEY (course) REFERENCES courses(course_name) "
+                    + "ON DELETE RESTRICT ON UPDATE CASCADE,"
+                    + "FOREIGN KEY (personal_email) REFERENCES enrollment_applications(personal_emails)"
+                    + "ON DELETE RESTRICT ON UPDATE CASCADE,"
+                    + "FOREIGN KEY (userID) REFERENCES usercreds (userID)"
+                    + "ON DELETE RESTRICT ON UPDATE CASCADE"
+                    + ");";
 
+            tableStmt.executeUpdate(createTableStudents);
+            
+            
+            
+       
+
+            		
+            		
+            		
             System.out.println(
-                "usercreds table is ready."
+                "table appplicants table is ready."
             );
 
             tableStmt.close();
@@ -124,5 +153,10 @@ public class DBConnection {
 
 
         return conn;
+    }
+    
+    public static void main(String[] args) {
+    	Connection conn = DBConnection.getConnection();
+    	
     }
 }
